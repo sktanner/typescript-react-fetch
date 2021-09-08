@@ -18,7 +18,8 @@ class Weather extends React.Component<myProps, myState> {
             temp: 0,
             description: ""
         }
-        // console.log(this.state);
+        this.getLocation = this.getLocation.bind(this)
+        this.getWeather = this.getWeather.bind(this)
     }
 
     getLocation () {
@@ -35,7 +36,8 @@ class Weather extends React.Component<myProps, myState> {
         }
     
     getWeather () {        
-        const URL = 'api.openweathermap.org/data/2.5/weather?lat=' + this.state.lat + '&lon=' + this.state.lon + '&appid=26f179f37713a7811deffc9d54bcf54b'
+        const { lat, lon } = this.state
+        const URL = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=26f179f37713a7811deffc9d54bcf54b`
 
         console.log(URL);
 
@@ -55,8 +57,8 @@ class Weather extends React.Component<myProps, myState> {
     }) .catch (error => console.log(error))
 }
     
-async componentDidMount(){
-    // this.getLocation()
+componentDidMount(){
+    this.getLocation()
 }
 
 componentDidUpdate(prevProps: myProps, prevState: myState){

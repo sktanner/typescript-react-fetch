@@ -28,32 +28,37 @@ class Weather extends React.Component<myProps, myState> {
                 lat: pos.coords.latitude,
                 lon: pos.coords.longitude
             })
-            console.log(this.state.lat , this.state.lon);
+            // console.log(this.state.lat , this.state.lon);
           },
           error => console.log(error)
           )
-        //   console.log(this.state);
         }
     
     getWeather () {        
         const { lat, lon } = this.state
         const URL = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=26f179f37713a7811deffc9d54bcf54b`
 
-        console.log(URL);
-
-        // let res = await fetch(URL)
-        // let json = await res.json()
-        // console.log(json);
+        // console.log(URL);
 
         fetch(URL)
         .then(res => res.json())
         .then(json => {
         this.setState({
-            temp: json.main.temp,
+            temp: Math.round(((parseFloat(json.main.temp)-273.15)*1.8)+32),
             description: json.weather[0].description
         })
-        console.log(this.state.description);
+
+        // console.log(this.state.description);
         
+        if( this.state.description.indexOf('rain') > 0 ) {
+            document.body.className = 'rainy';
+        } else if( this.state.description.indexOf('cloud') > 0 ) {
+            document.body.className = 'cloudy';
+        } else if( this.state.description.indexOf('sunny') > 0 ) {
+            document.body.className = 'sunny';
+        } else {
+            document.body.className = 'clear';
+        }
     }) .catch (error => console.log(error))
 }
     
@@ -71,8 +76,10 @@ componentDidUpdate(prevProps: myProps, prevState: myState){
     render() {
         return(
             <div>
+                <p id="temp">
+                    {this.state.temp + '\xB0'}
+                </p>
                 <p>
-                    {this.state.temp}
                     {this.state.description}
                 </p>
             </div>
